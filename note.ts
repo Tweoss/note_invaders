@@ -27,7 +27,6 @@ export class Note {
     this.audio_node = gain;
     this.svg = create_note_svg(track, this.y);
     this.output_node = output_node;
-    console.log("constructing", note);
 
     function create_note_svg(track: number, start_y: number) {
       const svg = document.createElementNS(
@@ -42,7 +41,7 @@ export class Note {
         (SVG_WINDOW.x_min + track_width * track).toString(),
       );
       svg.setAttribute("y", start_y.toString());
-      svg.setAttribute("fill", "red");
+      svg.setAttribute("fill", `hsl(${~~(360 * Math.random())}, 70%,  72%)`);
       svg.setAttributeNS(
         "http://www.w3.org/2000/xmlns/",
         "xmlns:xlink",

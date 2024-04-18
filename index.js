@@ -1,6 +1,6 @@
 import { Note, round_frequency_to_note } from "./note.js";
 import { find_pitch } from "./pitch.js";
-export const TRACK_COUNT = 200 / 10;
+export const TRACK_COUNT = 10;
 export const SVG_WINDOW = { x_min: -100, x_max: 100, y_min: -100, y_max: 100 };
 let audio_context, analyser, output_node, sample_buffer;
 const container = document.querySelector("#container");
@@ -12,16 +12,14 @@ function initialize() {
     analyser = audio_context.createAnalyser();
     analyser.fftSize = 2048;
     sample_buffer = new Float32Array(2048);
-    const compressor_node = new DynamicsCompressorNode(audio_context, {
-    // threshold: -35,
-    });
+    const compressor_node = new DynamicsCompressorNode(audio_context, {});
     output_node = new GainNode(audio_context, { gain: 0.1 });
     compressor_node.connect(output_node);
     output_node.connect(audio_context.destination);
     requestMicInput();
     game_active = true;
     speed = 0.2;
-    setInterval(handle_tick, 1000);
+    spawn_boxes();
     animate_boxes();
 }
 const button = document.querySelector("#start-button");
@@ -40,13 +38,14 @@ function requestMicInput() {
         alert("Microphone input required to use website.");
     });
 }
-function handle_tick() {
+function spawn_boxes() {
     if (!game_active) {
         return;
     }
-    if (notes.size < 1) {
+    if (notes.size < 2) {
         add_note();
     }
+    setTimeout(spawn_boxes, 1400 / speed);
 }
 function animate_boxes() {
     if (!game_active) {
